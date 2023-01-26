@@ -1,0 +1,2 @@
+class SqliteError(Exception):
+    pass
