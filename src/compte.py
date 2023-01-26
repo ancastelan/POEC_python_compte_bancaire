@@ -1,6 +1,8 @@
 import uuid
 from abc import ABC
-import const
+
+
+# import constants
 
 class Compte(ABC):
     """
@@ -16,16 +18,16 @@ class Compte(ABC):
 
     def retrait(self, montant: int = 0):
         '''
-            add an ammount (as an int) to solde
+            substract an ammount (as an int) to solde
         '''
         if 0 < montant <= self.solde:
             self.solde -= montant
         else:
             raise Exception('you cannot take money under your overdraft limit.')
 
-    def versement(self, montant=0):
+    def versement(self, montant: int = 0):
         '''
-            substract an ammount (as an int) to solde
+            add an ammount (as an int) to solde
         '''
         if montant > 0:
             self.solde += montant
@@ -52,11 +54,11 @@ class CompteCourant(Compte):
     retrait possible jusqu'a "overdraft_limit"
     application des agios si le solde est negatif après chaque opérations
     '''
+
     def __init__(self, nomProprietaire, **kwargs):
         self.overdraft_limit = 0
-        self.POURCENTAGE_AGIOS = 0.1
+        self.pourcentage_agios = 0.1
         super().__init__(nomProprietaire, **kwargs)
-
 
     def retrait(self, montant: int = 0):
         print(self)
@@ -65,11 +67,11 @@ class CompteCourant(Compte):
                 self.solde -= montant
                 if self.solde < 0:
                     self.appliquer_agios()
+                    print(self)
             else:
                 raise Exception('you cannot take money under your overdraft limit.')
         else:
             raise Exception('You cannot take a negative amount of money')
-        print(self)
 
     def versement(self, montant=0):
         print(self)
@@ -77,16 +79,17 @@ class CompteCourant(Compte):
             self.solde += montant
             if self.solde < 0:
                 self.appliquer_agios()
+                print(self)
         else:
             raise Exception('you cannot add a negative amount')
-        print(self)
 
     def appliquer_agios(self):
         '''
-        substract to solde a percentage of itself based on POURCENTAGE_AGIOS constant
+        substract to solde a percentage of itself based on pourcentage_agios constant
         '''
         if self.solde < 0:
-            self.solde = self.solde - (-self.solde * self.POURCENTAGE_AGIOS)
+            self.solde = self.solde - (-self.solde * self.pourcentage_agios)
+
 
 # --------------------------------------------------------------------------
 
@@ -103,29 +106,32 @@ class CompteEpargne(Compte):
         retrait impossible si solde apres opération < 0
         application des interets après chaque opérations
     '''
+
     def __init__(self, nomProprietaire, **kwargs):
-        self.POURCENTAGE_INTERET = 0.05
+        self.pourcentage_interet = 0.05
         super().__init__(nomProprietaire, **kwargs)
 
-
     def versement(self, montant: int = 0):
+        print(self)
         if montant > 0:
             self.solde += montant
             self.appliquer_interets()
+            print(self)
         else:
             raise Exception('You cannot add a negative amount of money')
 
     def retrait(self, montant: int = 0):
+        print(self)
         if montant > 0:
-             if self.solde - montant > 0:
-                 self.solde -= montant
-                 self.appliquer_interets()
-             else:
-                 raise Exception("you cannot take money you don't have")
+            if self.solde - montant > 0:
+                self.solde -= montant
+                self.appliquer_interets()
+                print(self)
+            else:
+                raise Exception("you cannot take money you don't have")
         else:
             raise Exception('You cannot take a negative amount of money')
 
-
     def appliquer_interets(self):
-        # self.solde += self.solde * POURCENTAGE_INTERET ?
-        self.solde = self.solde + (self.solde * self.POURCENTAGE_INTERET)
+        # self.solde += self.solde * pourcentage_interet ?
+        self.solde = self.solde + (self.solde * self.pourcentage_interet)
