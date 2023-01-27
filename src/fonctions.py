@@ -35,9 +35,55 @@ def account_exist(nom_proprio, numero_compte, db):
     else:
         return True
 
+def check_if_client_is_new(): #MENU DE CONNEXION/PRINCIPAL
+    statut_client = 0
+    while statut_client != 1 or statut_client != 2 or statut_client != 3:
+        print("""
+-------------------------------------------------------------------------------
+1) Vous voulez acceder a un de vos comptes
+2) Vous etes deja detenteur d'un compte et vous voulez en creer un autre
+3) Vous etes un nouveau client
+-------------------------------------------------------------------------------
+        """)
+        try:
+            statut_client = int(input('Entrez le numero de votre choix : '))
+            return statut_client
+
+        except(ValueError):
+            print("Veuillez entrer 1, 2 ou 3")
 
 
+# Fonctions necessaires a la création/modification de compte
+def type_compte():
+    choix_type_compte = 0
+    while choix_type_compte != 1 or choix_type_compte != 2 or choix_type_compte != 0:
+        print("""
+-------------------------------------------------------------------------------
+1) Vous voulez creer un compte courant
+2) Vous voulez creer un compte epargne
+0) Pour revenir au menu principal
+-------------------------------------------------------------------------------
+                """)
+        try:
+            choix_type_compte = int(input('Entrez le numero de votre choix : '))
+            if choix_type_compte == 1 or choix_type_compte == 2 or choix_type_compte == 0:
+                return choix_type_compte
+            else:
+                print("Veuillez entrer 1, 2 ou 0")
+
+        except ValueError:
+            print("Veuillez entrer 1, 2 ou 0")
 
 
-
+def choose_overdraft_limit():
+    client_ok = False
+    while not client_ok:
+        try:
+            overdaft_limit = int(input("veuillez entrer une limite de découvert (MAX 2000) : "))
+            if -2000 <= overdaft_limit <= 2000:
+                return overdaft_limit
+            else:
+                print('Vous ne pouvez pas depasser 2000€ de découvert')
+        except:
+            print('Veuillez entrer une somme !\n')
 
